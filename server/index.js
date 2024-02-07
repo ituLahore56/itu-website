@@ -30,6 +30,21 @@ app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
 });
 
+const requestHistory = {};
+
+const checkRequestHistory = (req, res) => {
+  const ip = req.ip;
+  if (requestHistory[ip]) {
+    const difference = new Date() - requestHistory[ip];
+    if (difference < 300000) {
+      res.status(429).send("Too many requests");
+      return false;
+    }
+  }
+  requestHistory[ip] = new Date();
+  return true;
+};
+
 app.get("/home", async (req, res) => {
   getDataForHomePage()
     .then((data) => res.json(data))
@@ -43,18 +58,21 @@ app.get("/about/:id", async (req, res) => {
 });
 
 app.post("/addComment/:id", async (req, res) => {
+  if (!checkRequestHistory(req, res)) return;
   return addComment(req.params.id, req.body.comment)
     .then((data) => res.json(data))
     .catch((error) => res.json({ error: error.message }));
 });
 
 app.post("/upVote/:id", async (req, res) => {
+  if (!checkRequestHistory(req, res)) return;
   return upVote(req.params.id)
     .then((data) => res.json(data))
     .catch((error) => res.json({ error: error.message }));
 });
 
 app.post("/downVote/:id", async (req, res) => {
+  if (!checkRequestHistory(req, res)) return;
   return downVote(req.params.id)
     .then((data) => res.json(data))
     .catch((error) => res.json({ error: error.message }));
