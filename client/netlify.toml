@@ -1,6 +1,6 @@
 [build]
   command = "vite build"
-  publish="/build"
+  publish="/dist"
   base = "/client"
 
 [[redirects]]
