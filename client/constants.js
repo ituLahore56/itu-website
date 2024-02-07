@@ -1,1 +1,1 @@
-export const SERVER_URL = "https://itu-web.vercel.app";
+export const SERVER_URL = "https://myitu-server.vercel.app";
