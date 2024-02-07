@@ -9,7 +9,7 @@ import {
   addComment,
   upVote,
   downVote,
-} from "./controllers/database.js";
+} from "../controllers/database.js";
 
 dotenv.config();
 
